@@ -1,6 +1,6 @@
 package com.github.trendrepo.injection.module
 
-import com.github.trendrepo.network.PostApi
+import com.github.trendrepo.network.RepositoryApi
 import com.github.trendrepo.utils.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -25,8 +25,8 @@ object NetworkModule {
     @Provides
     @Reusable
     @JvmStatic
-    internal fun providePostApi(retrofit: Retrofit): PostApi {
-        return retrofit.create(PostApi::class.java)
+    internal fun providePostApi(retrofit: Retrofit): RepositoryApi {
+        return retrofit.create(RepositoryApi::class.java)
     }
 
     /**
