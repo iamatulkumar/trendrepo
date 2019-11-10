@@ -1,7 +1,8 @@
-package com.github.trendrepo
+package com.github.trendrepo.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.github.trendrepo.R
 
 class MainActivity : AppCompatActivity() {
 
