@@ -5,5 +5,5 @@ import androidx.room.RoomDatabase
 
 @Database(entities = arrayOf(Repository::class), version = 1)
 abstract class AppDatabase : RoomDatabase()  {
-    abstract fun repository(): RepositoryDao
+    abstract fun repositoryDao(): RepositoryDao
 }
