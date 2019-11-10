@@ -5,4 +5,7 @@ import com.github.trendrepo.room.RepositoryDao
 
 class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseViewModel() {
 
+    init {
+
+    }
 }
