@@ -13,6 +13,7 @@ import com.github.trendrepo.viewmodel.RepositoryViewModel
 class RepositoryListAdapter : RecyclerView.Adapter<RepositoryListAdapter.ViewHolder>() {
     private lateinit var postList: List<Repository>
     private var clickedNode: Int = -1
+    private var previousClickedNode: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ItemRepositoryBinding = DataBindingUtil.inflate(
@@ -36,9 +37,13 @@ class RepositoryListAdapter : RecyclerView.Adapter<RepositoryListAdapter.ViewHol
                 if (position == clickedNode) {
                     clickedNode = -1;
                 } else {
+                    if (clickedNode != -1) {
+                        previousClickedNode = clickedNode
+                        notifyItemChanged(previousClickedNode)
+                    }
                     clickedNode = position
                 }
-                notifyDataSetChanged()
+                notifyItemChanged(holder.adapterPosition)
             }
         })
     }
