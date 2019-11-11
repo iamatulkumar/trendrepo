@@ -5,8 +5,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.MutableLiveData
-import com.github.trandrepo.adapter.RepositoryListAdapter
 import com.github.trendrepo.R
+import com.github.trendrepo.adapter.RepositoryListAdapter
 import com.github.trendrepo.base.BaseViewModel
 import com.github.trendrepo.network.RepositoryApi
 import com.github.trendrepo.room.Repository
@@ -27,6 +27,8 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
 
+    val errorClickListener = View.OnClickListener { loadRepositories() }
+
     val postListAdapter: RepositoryListAdapter = RepositoryListAdapter()
 
     init {
@@ -36,10 +38,14 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
     private fun loadRepositories() {
         subscription = Observable.fromCallable { repositoryDao.all }
             .concatMap { dbRepositoryList ->
-                repositoryApi.getRepositories().concatMap { apiRepositoryList ->
-                    repositoryDao.insertAll(*apiRepositoryList.toTypedArray())
-                    Observable.just(apiRepositoryList)
-                }
+                if (dbRepositoryList.isEmpty())
+                    repositoryApi.getRepositories().concatMap { apiRepositoryList ->
+                        repositoryDao.insertAll(*apiRepositoryList.toTypedArray())
+                        Observable.just(apiRepositoryList)
+                    }
+                else
+                    Observable.just(dbRepositoryList)
+
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

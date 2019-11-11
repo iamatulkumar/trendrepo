@@ -1,4 +1,4 @@
-package com.github.trandrepo.adapter
+package com.github.trendrepo.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +14,7 @@ class RepositoryListAdapter : RecyclerView.Adapter<RepositoryListAdapter.ViewHol
     private lateinit var postList: List<Repository>
     private var clickedNode: Int = -1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepositoryListAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ItemRepositoryBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.item_repository,
@@ -25,6 +25,7 @@ class RepositoryListAdapter : RecyclerView.Adapter<RepositoryListAdapter.ViewHol
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         if (clickedNode != -1 && clickedNode == position) {
             holder.bind(postList[position], true)
         } else {
