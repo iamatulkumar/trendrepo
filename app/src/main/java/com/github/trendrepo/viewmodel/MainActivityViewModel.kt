@@ -4,6 +4,7 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.MutableLiveData
 import com.github.trendrepo.R
 import com.github.trendrepo.base.BaseViewModel
 import com.github.trendrepo.network.RepositoryApi
@@ -21,6 +22,11 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
     lateinit var repositoryApi: RepositoryApi
 
     private lateinit var subscription: Disposable
+
+    val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
+    val errorMessage: MutableLiveData<Int> = MutableLiveData()
+
+    val postListAdapter: PostListAdapter = PostListAdapter()
 
     init {
         loadRepositories()
@@ -45,18 +51,20 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
     }
 
     private fun onRetrievePostListStart() {
-
+        loadingVisibility.value = View.VISIBLE
+        errorMessage.value = null
     }
 
     private fun onRetrievePostListFinish() {
-
+        loadingVisibility.value = View.GONE
     }
 
     private fun onRetrievePostListSuccess(repositoryList: List<Repository>) {
-
+        postListAdapter.updatePostList(postList)
     }
 
     private fun onRetrievePostListError() {
+        errorMessage.value = R.string.post_error
     }
 
     fun onClickToolBarMenu(v: View) {
@@ -74,9 +82,7 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
                 }
             }
         })
-
         popup.show()
-
     }
 
     override fun onCleared() {
