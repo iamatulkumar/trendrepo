@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.trendrepo.R
 import com.github.trendrepo.databinding.ActivityMainBinding
 import com.github.trendrepo.injection.ViewModelFactory
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.postList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(this)).get(MainActivityViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, ViewModelFactory(this, binding)).get(MainActivityViewModel::class.java)
         viewModel.errorMessage.observe(this, Observer {
                 errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
         })
@@ -43,4 +44,6 @@ class MainActivity : AppCompatActivity() {
     private fun hideError(){
         errorSnackbar?.dismiss()
     }
+
+
 }

@@ -5,9 +5,10 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.MutableLiveData
-import com.github.trendrepo.R
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.trendrepo.adapter.RepositoryListAdapter
 import com.github.trendrepo.base.BaseViewModel
+import com.github.trendrepo.databinding.ActivityMainBinding
 import com.github.trendrepo.network.RepositoryApi
 import com.github.trendrepo.room.Repository
 import com.github.trendrepo.room.RepositoryDao
@@ -17,7 +18,10 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseViewModel() {
+class MainActivityViewModel(
+    private val repositoryDao: RepositoryDao,
+    private val binding: ActivityMainBinding
+) : BaseViewModel() {
 
     @Inject
     lateinit var repositoryApi: RepositoryApi
@@ -33,6 +37,10 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
 
     init {
         loadRepositories()
+        binding.simpleSwipeRefreshLayout.setOnRefreshListener{
+            binding.simpleSwipeRefreshLayout.isRefreshing = false
+            loadRepositories()
+        }
     }
 
     private fun loadRepositories() {
@@ -40,12 +48,11 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
             .concatMap { dbRepositoryList ->
                 if (dbRepositoryList.isEmpty())
                     repositoryApi.getRepositories().concatMap { apiRepositoryList ->
-                        repositoryDao.insertAll(*apiRepositoryList.toTypedArray())
+                        //repositoryDao.insertAll(*apiRepositoryList.toTypedArray())
                         Observable.just(apiRepositoryList)
                     }
                 else
                     Observable.just(dbRepositoryList)
-
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -58,12 +65,14 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
     }
 
     private fun onRetrievePostListStart() {
+        binding.shimmerViewContainer.startShimmerAnimation()
         loadingVisibility.value = View.VISIBLE
         errorMessage.value = null
     }
 
     private fun onRetrievePostListFinish() {
         loadingVisibility.value = View.GONE
+        binding.shimmerViewContainer.stopShimmerAnimation()
     }
 
     private fun onRetrievePostListSuccess(repositoryList: List<Repository>) {
@@ -71,7 +80,8 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
     }
 
     private fun onRetrievePostListError() {
-        errorMessage.value = R.string.reposity_error
+        errorMessage.value = com.github.trendrepo.R.string.reposity_error
+        binding.shimmerViewContainer.stopShimmerAnimation()
     }
 
     fun onClickToolBarMenu(v: View) {
@@ -79,8 +89,8 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
     }
 
     private fun showFilterPopup(v: View) {
-        val popup = PopupMenu(v.context, v, Gravity.END, 0, R.style.OverflowMenu)
-        popup.inflate(R.menu.menu_main)
+        val popup = PopupMenu(v.context, v, Gravity.END, 0, com.github.trendrepo.R.style.OverflowMenu)
+        popup.inflate(com.github.trendrepo.R.menu.menu_main)
 
         popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
             override fun onMenuItemClick(item: MenuItem): Boolean {
