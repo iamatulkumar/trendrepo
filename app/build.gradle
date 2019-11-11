@@ -72,8 +72,8 @@ dependencies {
     compileOnly "org.glassfish:javax.annotation:3.1.1"
 
     //Rx
-    implementation "io.reactivex.rxjava2:rxjava:2.1.15"
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
+    implementation "io.reactivex.rxjava2:rxjava:$rx_java"
+    implementation "io.reactivex.rxjava2:rxandroid:$rx_android"
 
     // Support Design
     implementation "com.android.support:design:$android_support_version"
@@ -81,12 +81,13 @@ dependencies {
     // Room
     implementation "android.arch.persistence.room:runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
-    implementation 'androidx.room:room-runtime:2.2.1'
-    annotationProcessor 'androidx.room:room-compiler:2.2.1'
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // Glide
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 
-
+    // Facebook shimmer
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
 }

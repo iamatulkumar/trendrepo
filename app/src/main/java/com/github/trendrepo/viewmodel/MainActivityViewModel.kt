@@ -1,5 +1,10 @@
 package com.github.trendrepo.viewmodel
 
+import android.view.Gravity
+import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.widget.PopupMenu
+import com.github.trendrepo.R
 import com.github.trendrepo.base.BaseViewModel
 import com.github.trendrepo.network.RepositoryApi
 import com.github.trendrepo.room.Repository
@@ -47,11 +52,31 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
 
     }
 
-    private fun onRetrievePostListSuccess(postList: List<Repository>) {
+    private fun onRetrievePostListSuccess(repositoryList: List<Repository>) {
 
     }
 
     private fun onRetrievePostListError() {
+    }
+
+    fun onClickToolBarMenu(v: View) {
+        showFilterPopup(v)
+    }
+
+    private fun showFilterPopup(v: View) {
+        val popup = PopupMenu(v.context, v, Gravity.END, 0, R.style.OverflowMenu)
+        popup.inflate(R.menu.menu_main)
+
+        popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem): Boolean {
+                when (item.getItemId()) {
+                    else -> return false
+                }
+            }
+        })
+
+        popup.show()
+
     }
 
     override fun onCleared() {
