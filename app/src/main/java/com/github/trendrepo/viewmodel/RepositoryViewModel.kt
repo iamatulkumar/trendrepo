@@ -13,6 +13,7 @@ class RepositoryViewModel : BaseViewModel() {
         binding: ItemRepositoryBinding,
         expended: Boolean
     ) {
+        repository.languageColor?.let { binding.circularView.setSolidColor(it) }
         this.repository = repository;
         this.isExpanded = expended
     }

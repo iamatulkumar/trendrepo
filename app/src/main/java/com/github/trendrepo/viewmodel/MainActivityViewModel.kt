@@ -5,6 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.MutableLiveData
+import com.github.trandrepo.adapter.RepositoryListAdapter
 import com.github.trendrepo.R
 import com.github.trendrepo.base.BaseViewModel
 import com.github.trendrepo.network.RepositoryApi
@@ -26,7 +27,7 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
 
-    val postListAdapter: PostListAdapter = PostListAdapter()
+    val postListAdapter: RepositoryListAdapter = RepositoryListAdapter()
 
     init {
         loadRepositories()
@@ -60,11 +61,11 @@ class MainActivityViewModel(private val repositoryDao: RepositoryDao) : BaseView
     }
 
     private fun onRetrievePostListSuccess(repositoryList: List<Repository>) {
-        postListAdapter.updatePostList(postList)
+        postListAdapter.updatePostList(repositoryList)
     }
 
     private fun onRetrievePostListError() {
-        errorMessage.value = R.string.post_error
+        errorMessage.value = R.string.reposity_error
     }
 
     fun onClickToolBarMenu(v: View) {
