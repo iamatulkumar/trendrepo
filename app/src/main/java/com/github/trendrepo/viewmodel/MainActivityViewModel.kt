@@ -5,17 +5,18 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.MutableLiveData
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.trendrepo.adapter.RepositoryListAdapter
 import com.github.trendrepo.base.BaseViewModel
 import com.github.trendrepo.databinding.ActivityMainBinding
 import com.github.trendrepo.network.RepositoryApi
 import com.github.trendrepo.room.Repository
 import com.github.trendrepo.room.RepositoryDao
+import com.github.trendrepo.utils.SPUtils
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainActivityViewModel(
@@ -28,6 +29,8 @@ class MainActivityViewModel(
 
     private lateinit var subscription: Disposable
 
+    val spUtils: SPUtils = SPUtils(binding.root.context)
+
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
 
@@ -37,18 +40,22 @@ class MainActivityViewModel(
 
     init {
         loadRepositories()
-        binding.simpleSwipeRefreshLayout.setOnRefreshListener{
+        binding.simpleSwipeRefreshLayout.setOnRefreshListener {
             binding.simpleSwipeRefreshLayout.isRefreshing = false
             loadRepositories()
         }
     }
 
     private fun loadRepositories() {
+        val minutes =
+            TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - spUtils.getValueLong("TIME")!!)
+
         subscription = Observable.fromCallable { repositoryDao.all }
             .concatMap { dbRepositoryList ->
-                if (dbRepositoryList.isEmpty())
+                if (minutes >= 120 || dbRepositoryList.isEmpty())
                     repositoryApi.getRepositories().concatMap { apiRepositoryList ->
-                        //repositoryDao.insertAll(*apiRepositoryList.toTypedArray())
+                        repositoryDao.insertAll(*apiRepositoryList.toTypedArray())
+                        spUtils.save("TIME", System.currentTimeMillis())
                         Observable.just(apiRepositoryList)
                     }
                 else
@@ -89,7 +96,8 @@ class MainActivityViewModel(
     }
 
     private fun showFilterPopup(v: View) {
-        val popup = PopupMenu(v.context, v, Gravity.END, 0, com.github.trendrepo.R.style.OverflowMenu)
+        val popup =
+            PopupMenu(v.context, v, Gravity.END, 0, com.github.trendrepo.R.style.OverflowMenu)
         popup.inflate(com.github.trendrepo.R.menu.menu_main)
 
         popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
