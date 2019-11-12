@@ -32,6 +32,9 @@ class MainActivityViewModel(
     val spUtils: SPUtils = SPUtils(binding.root.context)
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
+
+    val errorVisibility: MutableLiveData<Int> = MutableLiveData()
+
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
 
     val errorClickListener = View.OnClickListener { loadRepositories() }
@@ -72,6 +75,7 @@ class MainActivityViewModel(
     }
 
     private fun onRetrievePostListStart() {
+        errorVisibility.value = View.GONE
         binding.shimmerViewContainer.startShimmerAnimation()
         loadingVisibility.value = View.VISIBLE
         errorMessage.value = null
@@ -79,6 +83,7 @@ class MainActivityViewModel(
 
     private fun onRetrievePostListFinish() {
         loadingVisibility.value = View.GONE
+        errorVisibility.value = View.GONE
         binding.shimmerViewContainer.stopShimmerAnimation()
     }
 
@@ -87,6 +92,7 @@ class MainActivityViewModel(
     }
 
     private fun onRetrievePostListError() {
+        errorVisibility.value = View.VISIBLE
         errorMessage.value = com.github.trendrepo.R.string.reposity_error
         binding.shimmerViewContainer.stopShimmerAnimation()
     }

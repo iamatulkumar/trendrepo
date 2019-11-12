@@ -28,10 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            android:paddingBottom="@dimen/dimen_16"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:paddingBottom="@dimen/dimen_16">
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -43,18 +43,18 @@
                     android:layout_centerInParent="true"
                     android:text="@string/toolbar_title"
                     android:textColor="@color/black"
-                    android:textSize="32dp"/>
+                    android:textSize="32dp" />
 
                 <ImageButton
                     android:id="@+id/img_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:onClick="@{(view) -> viewModel.onClickToolBarMenu(view)}"
                     android:layout_marginTop="@dimen/dimen_16"
-                    android:background="@android:color/transparent"
                     android:layout_marginRight="@dimen/dimen_12"
-                    android:src="@drawable/ic_more_vert"/>
+                    android:background="@android:color/transparent"
+                    android:onClick="@{(view) -> viewModel.onClickToolBarMenu(view)}"
+                    android:src="@drawable/ic_more_vert" />
 
             </RelativeLayout>
 
@@ -65,47 +65,141 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constrainedHeight="true"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/post_list"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:adapter="@{viewModel.getPostListAdapter()}"
-            />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/post_list"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:adapter="@{viewModel.getPostListAdapter()}" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constrainedHeight="true"
             android:background="@color/colorPrimary"
-            app:mutableVisibility="@{viewModel.getLoadingVisibility()}"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:orientation="vertical"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:mutableVisibility="@{viewModel.getLoadingVisibility()}"
             shimmer:duration="800">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <include layout="@layout/data_placeholder_layout" />
+
                 <include layout="@layout/data_placeholder_layout" />
+
                 <include layout="@layout/data_placeholder_layout" />
+
                 <include layout="@layout/data_placeholder_layout" />
+
                 <include layout="@layout/data_placeholder_layout" />
+
                 <include layout="@layout/data_placeholder_layout" />
+
                 <include layout="@layout/data_placeholder_layout" />
             </LinearLayout>
 
         </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/error_screen"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="?android:colorBackground"
+            app:mutableError="@{viewModel.getErrorVisibility()}"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+                <LinearLayout
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintBottom_toTopOf="@+id/button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/error_image"
+                        android:layout_width="250dp"
+                        android:layout_height="300dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/nointernet_connection"
+                        app:layout_constraintBottom_toTopOf="@+id/error_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/error_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_24"
+                        android:gravity="center"
+                        android:text="@string/error_screen_title"
+                        android:textColor="@color/black"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintBottom_toTopOf="@+id/error_body"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/error_image" />
+
+                    <TextView
+                        android:id="@+id/error_body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="@dimen/dimen_8"
+                        android:gravity="center"
+                        android:text="@string/error_screen_body"
+                        android:textColor="@color/black"
+                        android:textSize="15dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/error_title" />
+                </LinearLayout>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="@dimen/dimen_16"
+                android:layout_marginTop="109dp"
+                android:background="@drawable/shape_button_round"
+                android:text="RETRY"
+                android:textColor="#31b057"
+                android:textSize="@dimen/dimen_16"
+                android:onClick="@{viewModel.errorClickListener}"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteX="148dp"
+                tools:layout_editor_absoluteY="266dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
