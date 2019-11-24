@@ -18,5 +18,7 @@ Dependencies:
  
  MVVM — Android Architecture Components
  
+ [![Watch the video](https://github.com/iamatulkumar/trendrepo/blob/master/resource/screenshot.mp4)](https://github.com/iamatulkumar/trendrepo/blob/master/resource/screenshot.mp4)
+ 
 
 
