@@ -4,6 +4,8 @@ MVVM with Kotlin — Android Architecture Components, Dagger 2, Retrofit and RxA
 
 ## Getting Started
 
+This repository was the aim to show how I made everything work together in my own MVVM architecture, but not to explain what MVVM or those libraries are or how they work.
+
 Language: Kotlin
 Dependencies: 
  1. Network:  retrofit2
